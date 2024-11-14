@@ -3,17 +3,27 @@ import { PuppeteerWebBaseLoader } from "@langchain/community/document_loaders/we
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import OpenAI from "openai";
 
+import "dotenv/config";
+
+const {
+  OPENAI_API_KEY,
+  ASTRA_DB_APPLICATION_TOKEN,
+  ASTRA_DB_ENDPOINT,
+  ASTRA_DB_NAMESPACE,
+  ASTRA_DB_COLLECTION,
+} = process.env;
+
 type SimilarityMetric = "dot_product" | "cosine" | "euclidean";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY!,
+  apiKey: OPENAI_API_KEY as string,
 });
 
-const data: string[] = [];
+const data: string[] = ["https://nextjs.org/blog/next-15"];
 
-const client = new DataAPIClient(process.env.ASTRA_DB_APPLICATION_TOKEN);
-const db = client.db(process.env.ASTRA_DB_ENDPOINT!, {
-  namespace: process.env.ASTRA_DB_NAMESPACE,
+const client = new DataAPIClient(ASTRA_DB_APPLICATION_TOKEN!);
+const db = client.db(ASTRA_DB_ENDPOINT!, {
+  namespace: ASTRA_DB_NAMESPACE,
 });
 
 const splitter = new RecursiveCharacterTextSplitter({
@@ -24,7 +34,7 @@ const splitter = new RecursiveCharacterTextSplitter({
 const createCollection = async (
   similarityMetric: SimilarityMetric = "cosine"
 ) => {
-  const res = await db.createCollection(process.env.ASTRA_DB_COLLECTION!, {
+  const res = await db.createCollection(ASTRA_DB_COLLECTION!, {
     vector: {
       dimension: 1536,
       metric: similarityMetric,
@@ -51,7 +61,7 @@ const scrapePage = async (url: string) => {
 };
 
 const loadSampleData = async () => {
-  const collection = await db.collection(process.env.ASTRA_DB_COLLECTION!);
+  const collection = await db.collection(ASTRA_DB_COLLECTION!);
   for await (const url of data) {
     const content = await scrapePage(url);
     const chunks = await splitter.splitText(content!);
@@ -71,3 +81,5 @@ const loadSampleData = async () => {
     }
   }
 };
+
+createCollection().then(() => loadSampleData());
