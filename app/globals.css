@@ -82,3 +82,9 @@ input:focus {
   width: 80%;
   text-align: left;
 }
+
+.bubble.user {
+  border-radius: 20px 20px 0 20px;
+  background-color: #e1f4ffff;
+  margin-left: auto;
+}

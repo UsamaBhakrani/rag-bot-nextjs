@@ -1,6 +1,5 @@
 "use client";
 import { useChat } from "ai/react";
-import Image from "next/image";
 import { Message } from "ai";
 import PromptSuggestionRow from "./PromptSuggestionRow";
 import Loading from "./Loading";
@@ -16,6 +15,15 @@ const Chat = () => {
     input,
   } = useChat();
 
+  const handlePrompt = (content: string) => {
+    const msg: Message = {
+      id: crypto.randomUUID(),
+      role: "user",
+      content,
+    };
+    append(msg);
+  };
+
   const noMessages = true;
   return (
     <main>
@@ -27,7 +35,7 @@ const Chat = () => {
               it
             </p>
             <br />
-            <PromptSuggestionRow />
+            <PromptSuggestionRow onPromptClick={handlePrompt} />
           </>
         ) : (
           <>
