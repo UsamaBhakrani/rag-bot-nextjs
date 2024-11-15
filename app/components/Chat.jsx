@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Message } from "ai";
 import PromptSuggestionRow from "./PromptSuggestionRow";
 import Loading from "./Loading";
+import Bubble from "./Bubble";
 
 const Chat = () => {
   const {
@@ -30,8 +31,10 @@ const Chat = () => {
           </>
         ) : (
           <>
-            {/* map messages onto text bubbles */}
-            <Loading />
+            {messages.map((message, index) => {
+              return <Bubble key={index} message={message} />;
+            })}
+            {isLoading && <Loading />}
           </>
         )}
       </section>

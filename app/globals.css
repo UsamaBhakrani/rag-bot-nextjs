@@ -71,3 +71,14 @@ input[type="submit"] {
 input:focus {
   outline: none;
 }
+
+.bubble {
+  margin: 8px;
+  padding: 8px;
+  font-size: 15px;
+  border: none;
+  color: #383838;
+  box-shadow: #959da533 0 8px 24px;
+  width: 80%;
+  text-align: left;
+}
