@@ -38,30 +38,40 @@ export async function POST(req: Request) {
     });
 
     // Search for embedding
-    const collection = await db.collection(ASTRA_DB_COLLECTION!);
-    const cursor = await collection.find(
+    const collection = db.collection(ASTRA_DB_COLLECTION!);
+    const cursor = collection.find(
       {},
       {
         sort: {
           $vector: latestMessageEmbedding.data[0].embedding,
         },
-        limit: 5,
-        includeSimilarity: true,
+        limit: 10,
       }
     );
 
     const documents = await cursor.toArray();
-    const docsMap = await documents?.map((doc) => doc.text);
+    const docsMap = documents?.map((doc) => doc.text);
     docContext = JSON.stringify(docsMap);
 
     // Create a RAG Template
-    const ragTemplate = { role: "system", content: "" };
+    const ragTemplate = {
+      role: "system",
+      content: `You are an AI assistant who knows everything about Next Js 15, Use the context below to augment and format the response in markdown format.
+      --------------
+      START CONTEXT
+      ${docContext}
+      END CONTEXT
+      --------------
+      QUESTION: ${latestMessage}
+      --------------
+      `,
+    };
 
-    // const result = await streamText({
-    //   model: openai("gpt-4-turbo"),
-    //   messages: docsMap,
-    // });
-    // return new Response(result.toDataStreamResponse());
+    const result = await streamText({
+      model: openai("gpt-4-turbo"),
+      messages: [ragTemplate, ...messages],
+    });
+    return result.toTextStreamResponse();
   } catch (error) {
     console.log("error gettng responses from db");
   }

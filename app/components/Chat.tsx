@@ -13,7 +13,7 @@ const Chat = () => {
     isLoading,
     messages,
     input,
-  } = useChat();
+  } = useChat({ streamProtocol: "text" });
 
   const handlePrompt = (content: string) => {
     const msg: Message = {

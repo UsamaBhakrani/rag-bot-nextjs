@@ -19,7 +19,13 @@ const openai = new OpenAI({
   apiKey: OPENAI_API_KEY as string,
 });
 
-const data: string[] = ["https://nextjs.org/blog/next-15"];
+const data: string[] = [
+  // "https://nextjs.org/blog/next-15",
+  // "https://en.wikipedia.org/wiki/Formula_One",
+  // "https://en.wikipedia.org/wiki/2024_Formula_One_World_Championship",
+  "https://en.wikipedia.org/wiki/2024_United_States_elections",
+  // "https://en.wikipedia.org/wiki/2024_Pakistani_general_election",
+];
 
 const client = new DataAPIClient(ASTRA_DB_APPLICATION_TOKEN!);
 const db = client.db(ASTRA_DB_ENDPOINT!, {
@@ -82,4 +88,14 @@ const loadSampleData = async () => {
   }
 };
 
-createCollection().then(() => loadSampleData());
+const main = async () => {
+  try {
+    // await createCollection().then(() =>
+    await loadSampleData();
+    // );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+main();

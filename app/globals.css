@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  box-sizing: border-box;
+}
 body {
   margin: 0;
   padding: 0;
@@ -42,7 +45,7 @@ section.populated {
 }
 
 form {
-  height: 50px;
+  height: 80px;
   width: 100%;
   display: flex;
   border-top: #828282 solid 2px;
@@ -63,6 +66,7 @@ input[type="submit"] {
   width: 15%;
   padding: 10px;
   font-size: 15px;
+  text-align: center;
   border: none;
   color: #fff;
   background-color: #411b8d;
@@ -74,9 +78,10 @@ input:focus {
 
 .bubble {
   margin: 8px;
-  padding: 8px;
+  padding: 30px;
   font-size: 15px;
   border: none;
+  border-radius: 15px;
   color: #383838;
   box-shadow: #959da533 0 8px 24px;
   width: 80%;
