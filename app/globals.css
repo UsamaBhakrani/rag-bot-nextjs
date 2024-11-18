@@ -88,3 +88,8 @@ input:focus {
   background-color: #e1f4ffff;
   margin-left: auto;
 }
+
+.bubble.assistant {
+  border-radius: 20px 20px 20px 0;
+  background-color: #dce7ff;
+}

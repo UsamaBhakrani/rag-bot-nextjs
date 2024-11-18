@@ -24,7 +24,7 @@ const Chat = () => {
     append(msg);
   };
 
-  const noMessages = true;
+  const noMessages = !messages || messages.length === 0;
   return (
     <main>
       <section className={noMessages ? "" : "populated"}>
