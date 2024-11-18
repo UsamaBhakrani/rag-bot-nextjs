@@ -37,11 +37,31 @@ export async function POST(req: Request) {
       encoding_format: "float",
     });
 
-    const result = await streamText({
-      model: openai("gpt-4-turbo"),
-      messages,
-    });
-    return result.toDataStreamResponse();
+    // Search for embedding
+    const collection = await db.collection(ASTRA_DB_COLLECTION!);
+    const cursor = await collection.find(
+      {},
+      {
+        sort: {
+          $vector: latestMessageEmbedding.data[0].embedding,
+        },
+        limit: 5,
+        includeSimilarity: true,
+      }
+    );
+
+    const documents = await cursor.toArray();
+    const docsMap = await documents?.map((doc) => doc.text);
+    docContext = JSON.stringify(docsMap);
+
+    // Create a RAG Template
+    const ragTemplate = { role: "system", content: "" };
+
+    // const result = await streamText({
+    //   model: openai("gpt-4-turbo"),
+    //   messages: docsMap,
+    // });
+    // return new Response(result.toDataStreamResponse());
   } catch (error) {
     console.log("error gettng responses from db");
   }
